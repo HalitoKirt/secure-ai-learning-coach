@@ -225,3 +225,11 @@ telemetry/logs/
 
 # Application audit logs
 logs/
+
+# Terraform local files
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+*.tfvars.local
