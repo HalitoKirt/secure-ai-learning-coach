@@ -8,6 +8,20 @@ The project combines Retrieval-Augmented Generation (RAG), task-specific AI agen
 
 Unlike many AI demonstrations that focus exclusively on model output, this project focuses on the surrounding security architecture required to operate AI systems responsibly.
 
+## Project Status
+
+Current Phase: Local Security Engineering Prototype
+
+Status:
+- Core application functionality implemented
+- Security controls implemented
+- Telemetry and audit logging implemented
+- AWS deployment architecture in design
+- Terraform implementation planned
+
+Next Major Milestone:
+Deploy platform to AWS using ECS Fargate and Terraform-managed infrastructure.
+
 ---
 
 ## Project Goals
@@ -130,6 +144,23 @@ The agent is designed to help users understand quantum computing risks, "harvest
 
 ---
 
+## Repository Structure
+
+```text
+secure-ai-learning-platform/
+├── app/
+├── data/
+├── evals/
+├── logs/
+├── storage/
+├── docs/
+├── scripts/
+├── tests/
+├── README.md
+└── requirements.txt
+
+---
+
 ## Technology Stack
 
 ### Application Layer
@@ -191,7 +222,7 @@ This project explores practical security challenges associated with AI systems, 
 
 ---
 
-## Current Status
+## Current Status 
 
 ### Implemented
 
@@ -209,13 +240,14 @@ This project explores practical security challenges associated with AI systems, 
 * Rate limiting
 * API authentication
 
-### In Progress
+### Planned AWS Migration
 
-* Cloud deployment architecture
-* AWS integration
-* Terraform infrastructure
-* Cloud-native observability
-* Advanced security testing
+* ECS Fargate deployment
+* AWS WAF integration
+* CloudWatch observability
+* Terraform-managed infrastructure
+* Secure secrets management
+* Public demostration enviroment
 
 ---
 
@@ -270,6 +302,21 @@ Objectives:
 * Reduced configuration drift
 * Security review through code
 * Consistent cloud provisioning
+
+---
+
+## Documentation
+
+Additional architecture and deployment documentation will be maintained in the `/docs` directory as the AWS migration progresses.
+
+Planned documents include:
+
+- Architecture Design
+- Threat Modeling
+- Security Controls
+- Deployment Procedures
+- Operational Runbooks
+- Architecture Decision Records (ADRs)
 
 ---
 
