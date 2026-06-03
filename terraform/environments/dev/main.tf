@@ -22,3 +22,11 @@ module "networking" {
   public_subnet_cidrs = var.public_subnet_cidrs
   availability_zones  = var.availability_zones
 }
+
+module "logging" {
+  source = "../../modules/logging"
+
+  project_name       = var.project_name
+  environment        = var.environment
+  log_retention_days = var.log_retention_days
+}

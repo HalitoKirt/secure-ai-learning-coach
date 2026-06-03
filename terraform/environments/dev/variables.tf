@@ -27,3 +27,9 @@ variable "availability_zones" {
   description = "Availability zones for public subnets."
   type        = list(string)
 }
+
+variable "log_retention_days" {
+  description = "Number of days to retain CloudWatch logs."
+  type        = number
+  default     = 14
+}
