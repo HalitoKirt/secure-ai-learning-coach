@@ -52,13 +52,20 @@ module "load_balancer" {
   health_check_path     = "/health"
 }
 
+module "ecr" {
+  source = "../../modules/ecr"
+
+  project_name = var.project_name
+  environment  = var.environment
+}
+
 module "compute" {
   source = "../../modules/compute"
 
   project_name          = var.project_name
   environment           = var.environment
   aws_region            = var.aws_region
-  container_image       = var.container_image
+  container_image       = "${module.ecr.repository_url}:latest"
   app_port              = 8000
   log_group_name        = module.logging.log_group_name
   subnet_ids            = module.networking.public_subnet_ids

@@ -108,3 +108,19 @@ Future:
 * Push FastAPI image to ECR
 * Deploy FastAPI task definition
 * Verify /health endpoint through ALB
+
+---
+
+## Container
+
+Container Management
+
+Current:
+- Image tag = latest
+
+Production:
+- Use immutable version tags
+  - v1.0.0
+  - v1.0.1
+  - v1.1.0
+- Avoid relying on latest in production
