@@ -1,4 +1,4 @@
-import ollama
+from app.llm.ollama_client import client
 
 
 MODEL_NAME = "llama3.2:3b"
@@ -44,7 +44,7 @@ Scenario:
 {user_input}
 """
 
-    response = ollama.chat(
+    response = client.chat(
         model=MODEL_NAME,
         messages=[{"role": "user", "content": prompt}],
     )
