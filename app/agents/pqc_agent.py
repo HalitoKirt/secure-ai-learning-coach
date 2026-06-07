@@ -1,7 +1,5 @@
-from app.llm.ollama_client import client
+from app.llm.provider import chat
 
-
-MODEL_NAME = "llama3.2:3b"
 
 
 def run_pqc_agent(user_input: str) -> str:
@@ -44,9 +42,8 @@ Scenario:
 {user_input}
 """
 
-    response = client.chat(
-        model=MODEL_NAME,
+    response = chat(
         messages=[{"role": "user", "content": prompt}],
     )
 
-    return response["message"]["content"]
+    return response

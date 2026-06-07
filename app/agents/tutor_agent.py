@@ -1,7 +1,4 @@
-from app.llm.ollama_client import client
-
-
-MODEL_NAME = "llama3.2:3b"
+from app.llm.provider import chat
 
 
 def run_tutor_agent(question: str, context: str) -> str:
@@ -29,11 +26,8 @@ User Question:
 Tutor Agent Response:
 """
 
-    response = client.chat(
-        model=MODEL_NAME,
+    return chat(
         messages=[
             {"role": "user", "content": prompt}
         ]
     )
-
-    return response["message"]["content"]
