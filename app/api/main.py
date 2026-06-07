@@ -361,7 +361,8 @@ def ask(
             "endpoint": "/ask",
             "mode": mode,
             "status": "server_error",
-            "error_type": type(e).__name__
+            "error_type": type(e).__name__,
+            "error_message": str(e)
         })
 
         raise HTTPException(

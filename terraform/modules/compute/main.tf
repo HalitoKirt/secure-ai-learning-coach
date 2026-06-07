@@ -29,6 +29,47 @@ resource "aws_iam_role" "task_execution" {
   }
 }
 
+resource "aws_iam_role" "task" {
+  name = "${var.project_name}-${var.environment}-ecs-task-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Principal = {
+          Service = "ecs-tasks.amazonaws.com"
+        }
+        Action = "sts:AssumeRole"
+      }
+    ]
+  })
+
+  tags = {
+    Name        = "${var.project_name}-${var.environment}-ecs-task-role"
+    Environment = var.environment
+  }
+}
+
+resource "aws_iam_role_policy" "bedrock_invoke" {
+  name = "${var.project_name}-${var.environment}-bedrock-invoke"
+  role = aws_iam_role.task.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "bedrock:InvokeModel",
+          "bedrock:InvokeModelWithResponseStream"
+        ]
+        Resource = "*"
+      }
+    ]
+  })
+}
+
 resource "aws_iam_role_policy_attachment" "task_execution" {
   role       = aws_iam_role.task_execution.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
@@ -41,12 +82,32 @@ resource "aws_ecs_task_definition" "app" {
   cpu                      = var.task_cpu
   memory                   = var.task_memory
   execution_role_arn       = aws_iam_role.task_execution.arn
+  task_role_arn            = aws_iam_role.task.arn
 
   container_definitions = jsonencode([
     {
       name      = var.container_name
       image     = var.container_image
       essential = true
+
+      environment = [
+        {
+          name  = "AWS_REGION"
+          value = var.aws_region
+        },
+        {
+          name  = "LLM_PROVIDER"
+          value = "bedrock"
+        },
+        {
+          name  = "BEDROCK_MODEL_ID"
+          value = "us.amazon.nova-lite-v1:0"
+        },
+        {
+          name  = "SECURE_API_KEY"
+          value = "dev-secret-key"
+        }
+      ]
 
       portMappings = [
         {
