@@ -20,9 +20,17 @@ from app.rag.rag import query_docs
 from app.telemetry.tracing import create_trace_id, create_span_id
 from app.telemetry.logger import log_event
 
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+import json
+from pathlib import Path
+
 
 app = FastAPI(title="Secure AI Learning Platform API")
 
+app.mount("/static", StaticFiles(directory="app/static"), name="static")
+
+TELEMETRY_LOG_PATH = Path("telemetry/logs/events.jsonl")
 
 class AskRequest(BaseModel):
     question: str
@@ -34,6 +42,27 @@ class AskRequest(BaseModel):
 @app.get("/")
 def root():
     return {"message": "Secure AI Learning Platform API is running"}
+
+
+@app.get("/dashboard")
+def dashboard():
+    return FileResponse("app/static/dashboard.html")
+
+
+@app.get("/api/telemetry/recent")
+def recent_telemetry(limit: int = 20):
+    if not TELEMETRY_LOG_PATH.exists():
+        return {"events": []}
+
+    events = []
+    with TELEMETRY_LOG_PATH.open("r", encoding="utf-8") as log_file:
+        for line in log_file:
+            try:
+                events.append(json.loads(line))
+            except json.JSONDecodeError:
+                continue
+
+    return {"events": events[-limit:]}
 
 
 @app.get("/health")
@@ -369,3 +398,24 @@ def ask(
             status_code=500,
             detail="Internal server error"
         )
+    
+@app.post("/demo/ask")
+def demo_ask(request: AskRequest, http_request: Request):
+    """
+    Recruiter-friendly demo endpoint.
+
+    This endpoint intentionally does not require an API key,
+    but it still keeps rate limiting, prompt-injection detection,
+    RAG context inspection, output filtering, and telemetry.
+    """
+
+    allowed_demo_modes = {"tutor", "quiz", "security", "pqc"}
+    mode = request.mode.lower().strip()
+
+    if mode not in allowed_demo_modes:
+        raise HTTPException(
+            status_code=400,
+            detail="Demo mode only supports tutor, quiz, security, and pqc."
+        )
+
+    return ask(request=request, http_request=http_request, _="demo")    
