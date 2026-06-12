@@ -1,10 +1,22 @@
+function getEventOutcome(event, eventData) {
+  return (
+    event.status ||
+    eventData.status ||
+    eventData.action ||
+    eventData.policy_action ||
+    eventData.risk_level ||
+    eventData.reason ||
+    "recorded"
+  );
+} 
+
 async function loadEvents() {
   const eventsContainer = document.getElementById("events");
   const summaryContainer = document.getElementById("eventSummary");
 
   eventsContainer.innerHTML = "Loading telemetry...";
 
-  try {
+    try {
     const response = await fetch("/api/telemetry/recent");
     const data = await response.json();
 
@@ -23,7 +35,7 @@ async function loadEvents() {
       card.innerHTML = `
         <div class="event-title">${event.event_type || "unknown_event"}</div>
         <div class="event-time">${event.timestamp || "no timestamp"}</div>
-        <div>Status: ${event.status || eventData.status || "unknown"}</div>
+        <div>Outcome: ${getEventOutcome(event, eventData)}</div>
         <div>Component: ${eventData.component || "n/a"}</div>
         <div>Mode: ${eventData.mode || "n/a"}</div>
       `;
