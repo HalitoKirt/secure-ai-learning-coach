@@ -30,7 +30,7 @@ app = FastAPI(title="Secure AI Learning Platform API")
 
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
-TELEMETRY_LOG_PATH = Path("telemetry/logs/events.jsonl")
+TELEMETRY_LOG_PATH = Path("logs/audit.log")
 
 class AskRequest(BaseModel):
     question: str
